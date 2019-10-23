@@ -8,6 +8,8 @@ five multi-modal benchmark datasets i.e., YouTube, MOUD, ICT-MMMO, CMU-MOSI, and
 first download the dataset from given link and set the path in the code accordingly.
 make two folder (i) results and (ii) weights
 
-how to run file ==>> trimodal_YouTube.py
+how to run file:
 
 python trimodal_YouTube.py
+
+python version 2.7
