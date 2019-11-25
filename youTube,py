@@ -259,7 +259,7 @@ def CIA_model(mode, filePath, attn_type='mmmu', drops=[0.7, 0.5, 0.5], r_units=3
                             batch_size=16,
                             shuffle=True,
                             callbacks=[check1, check2],
-                            validation_data=([test_text,test_audio,test_video,test_text,test_text,test_audio,test_audio,test_video,test_video], [test_audio,test_video,test_text,test_video,test_text,test_audio,test_label]),
+                            validation_data=(valid_text,valid_audio,valid_video,valid_text,valid_text,valid_audio,valid_audio,valid_video,valid_video], [valid_audio,valid_video,valid_text,valid_video,valid_text,valid_audio,valid_label]),
                             verbose=1)
 
         model.load_weights(path)
