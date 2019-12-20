@@ -13,5 +13,7 @@ how to run file:
 python trimodal_YouTube.py
 
 python version 2.7
+
 keras: 2.2.2
+
 tensorflow: 1.9.0
