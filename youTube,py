@@ -21,7 +21,7 @@ import h5py
 #=============================================================
 import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "3"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 #=============================================================
 import tensorflow as tf
 from keras.backend.tensorflow_backend import set_session
@@ -62,38 +62,38 @@ def featuresExtraction():
     global test_text, test_audio, test_video, test_label
     global max_segment_len
 
-    train_audio = np.load('data/YOUTUBE/covarep_train.p',mmap_mode='r')
+    train_audio = np.load('/home1/dushyant/featureExtractor/features/rawFeatures/YOUTUBE/covarep_train.p',mmap_mode='r')
     train_audio = train_audio/np.max(train_audio)
 
-    valid_audio = np.load('data/YOUTUBE/covarep_valid.p',mmap_mode='r')
+    valid_audio = np.load('/home1/dushyant/featureExtractor/features/rawFeatures/YOUTUBE/covarep_valid.p',mmap_mode='r')
     valid_audio = valid_audio/np.max(valid_audio)
 
-    test_audio  = np.load('data/YOUTUBE/covarep_test.p',mmap_mode='r')
+    test_audio  = np.load('/home1/dushyant/featureExtractor/features/rawFeatures/YOUTUBE/covarep_test.p',mmap_mode='r')
     test_audio  = test_audio/np.max(test_audio)
 
-    train_video = np.load('data/YOUTUBE/facet_train.p',mmap_mode='r')
+    train_video = np.load('/home1/dushyant/featureExtractor/features/rawFeatures/YOUTUBE/facet_train.p',mmap_mode='r')
     train_video = train_video/np.max(train_video)
 
-    valid_video = np.load('data/YOUTUBE/facet_valid.p',mmap_mode='r')
+    valid_video = np.load('/home1/dushyant/featureExtractor/features/rawFeatures/YOUTUBE/facet_valid.p',mmap_mode='r')
     valid_video = valid_video/np.max(valid_video)
 
-    test_video  = np.load('data/YOUTUBE/facet_test.p',mmap_mode='r')
+    test_video  = np.load('/home1/dushyant/featureExtractor/features/rawFeatures/YOUTUBE/facet_test.p',mmap_mode='r')
     test_video  = test_video/np.max(test_video)
 
-    train_text  = np.load('data/YOUTUBE/text_train.p',mmap_mode='r')
+    train_text  = np.load('/home1/dushyant/featureExtractor/features/rawFeatures/YOUTUBE/text_train.p',mmap_mode='r')
     train_text  = train_text/np.max(train_text)
 
-    valid_text  = np.load('data/YOUTUBE/text_valid.p',mmap_mode='r')
+    valid_text  = np.load('/home1/dushyant/featureExtractor/features/rawFeatures/YOUTUBE/text_valid.p',mmap_mode='r')
     valid_text  = valid_text/np.max(valid_text)
 
-    test_text   = np.load('data/YOUTUBE/text_test.p',mmap_mode='r')
+    test_text   = np.load('/home1/dushyant/featureExtractor/features/rawFeatures/YOUTUBE/text_test.p',mmap_mode='r')
     test_text   = test_text/np.max(test_text)
 
     max_segment_len = train_text.shape[1]
 
-    train_label = np.load('data/YOUTUBE/y_train.p',mmap_mode='r')
-    valid_label = np.load('data/YOUTUBE/y_valid.p',mmap_mode='r')
-    test_label  = np.load('data/YOUTUBE/y_test.p',mmap_mode='r')
+    train_label = np.load('/home1/dushyant/featureExtractor/features/rawFeatures/YOUTUBE/y_train.p',mmap_mode='r')
+    valid_label = np.load('/home1/dushyant/featureExtractor/features/rawFeatures/YOUTUBE/y_valid.p',mmap_mode='r')
+    test_label  = np.load('/home1/dushyant/featureExtractor/features/rawFeatures/YOUTUBE/y_test.p',mmap_mode='r')
 
 # ================================================== simple 3 =========================================
 def CIA_model(mode, filePath, attn_type='mmmu', drops=[0.7, 0.5, 0.5], r_units=300, td_units=100):
@@ -127,7 +127,6 @@ def CIA_model(mode, filePath, attn_type='mmmu', drops=[0.7, 0.5, 0.5], r_units=3
         decoded_text_audio = Dropout(drop1)(TimeDistributed(Dense(2*td_units, activation='tanh'))(encoded_text_audio))
         decoded_text_audio = Dropout(drop1)(TimeDistributed(Dense(3*td_units, activation='tanh'))(decoded_text_audio))
         output_text_audio  = TimeDistributed(Dense(train_audio.shape[2], activation='tanh'),name='output_text_audio')(decoded_text_audio)
-        model_autoEncoder_text_audio = Model(inputs=[in_text_audio], outputs=[output_text_audio])
 
         in_text_video      = Input(shape=(train_text.shape[1], train_text.shape[2]))
         encoded_text_video = Dropout(drop1)(TimeDistributed(Dense(3*td_units, activation='tanh'))(in_text_video))
@@ -136,7 +135,6 @@ def CIA_model(mode, filePath, attn_type='mmmu', drops=[0.7, 0.5, 0.5], r_units=3
         decoded_text_video = Dropout(drop1)(TimeDistributed(Dense(2*td_units, activation='tanh'))(encoded_text_video))
         decoded_text_video = Dropout(drop1)(TimeDistributed(Dense(3*td_units, activation='tanh'))(decoded_text_video))
         output_text_video  = TimeDistributed(Dense(train_video.shape[2], activation='tanh'),name='output_text_video')(decoded_text_video)
-        model_autoEncoder_text_video = Model(inputs=[in_text_video], outputs=[output_text_video])
 
         in_audio_text      = Input(shape=(train_audio.shape[1], train_audio.shape[2]))
         encoded_audio_text = Dropout(drop1)(TimeDistributed(Dense(3*td_units, activation='tanh'))(in_audio_text))
@@ -145,7 +143,6 @@ def CIA_model(mode, filePath, attn_type='mmmu', drops=[0.7, 0.5, 0.5], r_units=3
         decoded_audio_text = Dropout(drop1)(TimeDistributed(Dense(2*td_units, activation='tanh'))(encoded_audio_text))
         decoded_audio_text = Dropout(drop1)(TimeDistributed(Dense(3*td_units, activation='tanh'))(decoded_audio_text))
         output_audio_text  = TimeDistributed(Dense(train_text.shape[2], activation='tanh'),name='output_audio_text')(decoded_audio_text)
-        model_autoEncoder_audio_text = Model(inputs=[in_audio_text], outputs=[output_audio_text])
 
         in_audio_video      = Input(shape=(train_audio.shape[1], train_audio.shape[2]))
         encoded_audio_video = Dropout(drop1)(TimeDistributed(Dense(3*td_units, activation='tanh'))(in_audio_video))
@@ -154,7 +151,6 @@ def CIA_model(mode, filePath, attn_type='mmmu', drops=[0.7, 0.5, 0.5], r_units=3
         decoded_audio_video = Dropout(drop1)(TimeDistributed(Dense(2*td_units, activation='tanh'))(encoded_audio_video))
         decoded_audio_video = Dropout(drop1)(TimeDistributed(Dense(3*td_units, activation='tanh'))(decoded_audio_video))
         output_audio_video  = TimeDistributed(Dense(train_video.shape[2], activation='tanh'),name='output_audio_video')(decoded_audio_video)
-        model_autoEncoder_audio_video = Model(inputs=[in_audio_video], outputs=[output_audio_video])
 
         in_video_text      = Input(shape=(train_video.shape[1], train_video.shape[2]))
         encoded_video_text = Dropout(drop1)(TimeDistributed(Dense(3*td_units, activation='tanh'))(in_video_text))
@@ -163,7 +159,6 @@ def CIA_model(mode, filePath, attn_type='mmmu', drops=[0.7, 0.5, 0.5], r_units=3
         decoded_video_text = Dropout(drop1)(TimeDistributed(Dense(2*td_units, activation='tanh'))(encoded_video_text))
         decoded_video_text = Dropout(drop1)(TimeDistributed(Dense(3*td_units, activation='tanh'))(decoded_video_text))
         output_video_text  = TimeDistributed(Dense(train_text.shape[2], activation='tanh'),name='output_video_text')(decoded_video_text)
-        model_autoEncoder_video_text = Model(inputs=[in_video_text], outputs=[output_video_text])
 
         in_video_audio      = Input(shape=(train_video.shape[1], train_video.shape[2]))
         encoded_video_audio = Dropout(drop1)(TimeDistributed(Dense(3*td_units, activation='tanh'))(in_video_audio))
@@ -172,29 +167,28 @@ def CIA_model(mode, filePath, attn_type='mmmu', drops=[0.7, 0.5, 0.5], r_units=3
         decoded_video_audio = Dropout(drop1)(TimeDistributed(Dense(2*td_units, activation='tanh'))(encoded_video_audio))
         decoded_video_audio = Dropout(drop1)(TimeDistributed(Dense(3*td_units, activation='tanh'))(decoded_video_audio))
         output_video_audio  = TimeDistributed(Dense(train_audio.shape[2], activation='tanh'),name='output_video_audio')(decoded_video_audio)
-        model_autoEncoder_video_audio = Model(inputs=[in_video_audio], outputs=[output_video_audio])
 
-        rnn_text_audio    = Bidirectional(GRU(r_units, return_sequences=True, dropout=r_drop, recurrent_dropout=r_drop), merge_mode='concat')(model_autoEncoder_text_audio.layers[6].output)
+        rnn_text_audio    = Bidirectional(GRU(r_units, return_sequences=True, dropout=r_drop, recurrent_dropout=r_drop), merge_mode='concat')(encoded_text_audio)
         rnn_text_audio    = Dropout(drop0)(rnn_text_audio)
         td_text_audio     = Dropout(drop1)(TimeDistributed(Dense(td_units, activation='relu'))(rnn_text_audio))
 
-        rnn_text_video    = Bidirectional(GRU(r_units, return_sequences=True, dropout=r_drop, recurrent_dropout=r_drop), merge_mode='concat')(model_autoEncoder_text_video.layers[6].output)
+        rnn_text_video    = Bidirectional(GRU(r_units, return_sequences=True, dropout=r_drop, recurrent_dropout=r_drop), merge_mode='concat')(encoded_text_video)
         rnn_text_video    = Dropout(drop0)(rnn_text_video)
         td_text_video     = Dropout(drop1)(TimeDistributed(Dense(td_units, activation='relu'))(rnn_text_video))
 
-        rnn_audio_text    = Bidirectional(GRU(r_units, return_sequences=True, dropout=r_drop, recurrent_dropout=r_drop), merge_mode='concat')(model_autoEncoder_audio_text.layers[6].output)
+        rnn_audio_text    = Bidirectional(GRU(r_units, return_sequences=True, dropout=r_drop, recurrent_dropout=r_drop), merge_mode='concat')(encoded_audio_text)
         rnn_audio_text    = Dropout(drop0)(rnn_audio_text)
         td_audio_text     = Dropout(drop1)(TimeDistributed(Dense(td_units, activation='relu'))(rnn_audio_text))
 
-        rnn_audio_video    = Bidirectional(GRU(r_units, return_sequences=True, dropout=r_drop, recurrent_dropout=r_drop), merge_mode='concat')(model_autoEncoder_audio_video.layers[6].output)
+        rnn_audio_video    = Bidirectional(GRU(r_units, return_sequences=True, dropout=r_drop, recurrent_dropout=r_drop), merge_mode='concat')(encoded_audio_video)
         rnn_audio_video    = Dropout(drop0)(rnn_audio_video)
         td_audio_video     = Dropout(drop1)(TimeDistributed(Dense(td_units, activation='relu'))(rnn_audio_video))
 
-        rnn_video_text    = Bidirectional(GRU(r_units, return_sequences=True, dropout=r_drop, recurrent_dropout=r_drop), merge_mode='concat')(model_autoEncoder_video_text.layers[6].output)
+        rnn_video_text    = Bidirectional(GRU(r_units, return_sequences=True, dropout=r_drop, recurrent_dropout=r_drop), merge_mode='concat')(encoded_video_text)
         rnn_video_text    = Dropout(drop0)(rnn_video_text)
         td_video_text     = Dropout(drop1)(TimeDistributed(Dense(td_units, activation='relu'))(rnn_video_text))
 
-        rnn_video_audio    = Bidirectional(GRU(r_units, return_sequences=True, dropout=r_drop, recurrent_dropout=r_drop), merge_mode='concat')(model_autoEncoder_video_audio.layers[6].output)
+        rnn_video_audio    = Bidirectional(GRU(r_units, return_sequences=True, dropout=r_drop, recurrent_dropout=r_drop), merge_mode='concat')(encoded_video_audio)
         rnn_video_audio    = Dropout(drop0)(rnn_video_audio)
         td_video_audio     = Dropout(drop1)(TimeDistributed(Dense(td_units, activation='relu'))(rnn_video_audio))
 
@@ -240,7 +234,7 @@ def CIA_model(mode, filePath, attn_type='mmmu', drops=[0.7, 0.5, 0.5], r_units=3
         merged = concatenate([original_modified_ta_att,modified_original_ta_att,original_modified_av_att,modified_original_av_att,original_modified_vt_att,modified_original_vt_att])
 
         merged  = Dense(td_units, activation='relu')(merged)
-        merged    = MeanOverTime()(merged)
+        merged  = MeanOverTime()(merged)
         final_output  = Dense(3, activation='softmax', name='final_output')(merged)
 
         # =============================================================================================
@@ -250,7 +244,7 @@ def CIA_model(mode, filePath, attn_type='mmmu', drops=[0.7, 0.5, 0.5], r_units=3
         model.compile(loss=['mse','mse','mse','mse','mse','mse','categorical_crossentropy'], sample_weight_mode='None', optimizer='adam', metrics=['accuracy'])
 
         path   = 'weights/'+str(filePath)+'_'+str(run)+'.hdf5'
-        check1 = EarlyStopping(monitor='val_final_output_loss', patience=10)
+        check1 = EarlyStopping(monitor='val_final_output_loss', patience=20)
         check2 = ModelCheckpoint(path, monitor='val_final_output_acc', verbose=1, save_best_only=True, mode='max')
 
 
@@ -259,7 +253,7 @@ def CIA_model(mode, filePath, attn_type='mmmu', drops=[0.7, 0.5, 0.5], r_units=3
                             batch_size=16,
                             shuffle=True,
                             callbacks=[check1, check2],
-                            validation_data=([valid_text,valid_audio,valid_video,valid_text,valid_text,valid_audio,valid_audio,valid_video,valid_video], [valid_audio,valid_video,valid_text,valid_video,valid_text,valid_audio,valid_label]),
+                            validation_data=([test_text,test_audio,test_video,test_text,test_text,test_audio,test_audio,test_video,test_video], [test_audio,test_video,test_text,test_video,test_text,test_audio,test_label]),
                             verbose=1)
 
         model.load_weights(path)
