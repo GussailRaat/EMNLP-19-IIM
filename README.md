@@ -15,7 +15,7 @@ For the evaluation of our proposed CIA approach, we employ five multi-modal benc
 
 ### For YouTube dataset: 
 
-for trimodal -->> python trimodal_YouTube.py
+For trimodal -->> python trimodal_YouTube.py
 
 ========================
 
