@@ -5,7 +5,7 @@ For the evaluation of our proposed CIA approach, we employ five multi-modal benc
 
 ### Dataset
 
-* These datasets can be accessed through (https://github.com/A2Zadeh/CMU-MultimodalSDK) or 
+* You can access these datasets from [here](https://github.com/A2Zadeh/CMU-MultimodalSDK) or 
 
 * You can download datasets from this link (https://drive.google.com/drive/folders/1IVgdjfRGSqnai45ksot7UZ5C-1xJBBWZ?usp=sharing).
 
