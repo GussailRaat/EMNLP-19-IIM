@@ -10,13 +10,14 @@ make two folder (i) results and (ii) weights
 
 how to run file:
 
-python trimodal_YouTube.py
+For YouTube dataset:
+for trimodal-->> python trimodal_YouTube.py
 
 ========================
 
 --versions--
 
-python version 2.7
+python: 2.7
 
 keras: 2.2.2
 
