@@ -12,7 +12,8 @@ how to run file:
 
 python trimodal_YouTube.py
 
-========================\\
+========================
+
 --versions--
 
 python version 2.7
